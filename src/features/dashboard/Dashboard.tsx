@@ -31,9 +31,11 @@ export const Dashboard = (): JSX.Element => {
       <h1 className="text-2xl font-semibold">Dashboard</h1>
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
         {cards.map(([label, value]) => (
-          <Panel key={label}>
-            <p className="text-sm text-slate-500">{label}</p>
-            <p className="mt-2 text-2xl font-semibold">{value}</p>
+          <Panel className="flex min-h-20 items-center justify-center text-center" key={label}>
+            <div className="flex flex-wrap items-baseline justify-center gap-x-2 gap-y-1">
+              <span className="text-sm text-slate-500">{label}</span>
+              <span className="text-xl font-semibold">{value}</span>
+            </div>
           </Panel>
         ))}
       </div>
