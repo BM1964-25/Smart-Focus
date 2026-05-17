@@ -36,6 +36,11 @@ const sections = [
     icon: KeyRound,
     title: '7. Lizenz und Sicherheit',
     text: 'Der Lizenzschlüssel wird unter Einstellungen eingegeben und lokal im Browser gespeichert. Der Anthropic API-Key gehört niemals ins Frontend, sondern nur in den Backend-Proxy über ANTHROPIC_API_KEY.'
+  },
+  {
+    icon: KeyRound,
+    title: '8. Anthropic API',
+    text: 'Die KI-Funktionen nutzen die Anthropic Messages API über einen Backend-Proxy. Dafür wird ein Anthropic-Konto mit API-Key benötigt. Der Schlüssel wird serverseitig als ANTHROPIC_API_KEY hinterlegt und darf nicht in den Browser oder in GitHub Pages eingetragen werden.'
   }
 ];
 
@@ -101,6 +106,45 @@ export const HelpView = (): JSX.Element => (
               Beispiel: <span className="font-mono">#aufgabe Angebot Müller prüfen</span> ist eine
               echte Aufgabe. <span className="font-mono">Termin Bauherr 10:00</span> ist dagegen
               zunächst nur ein Kalenderblock und bleibt Kontext, bis du ihn ausdrücklich übernimmst.
+            </p>
+          </div>
+        </div>
+      </div>
+    </Panel>
+    <Panel>
+      <div className="flex items-start gap-3">
+        <Brain className="mt-1 text-accent" size={22} />
+        <div>
+          <h2 className="font-semibold">Anthropic API und KI-Leistungen</h2>
+          <div className="mt-2 space-y-3 text-sm leading-6 text-slate-600 dark:text-slate-300">
+            <p>
+              Für die KI-Funktionen wird ein Anthropic-Konto benötigt. Nach der Anmeldung bei Anthropic
+              wird im Anthropic Console-Bereich ein API-Key erzeugt. Dieser Schlüssel gehört nicht in
+              die App-Oberfläche und nicht in GitHub Pages, sondern ausschließlich in den Backend-Proxy
+              als Umgebungsvariable <span className="font-mono">ANTHROPIC_API_KEY</span>.
+            </p>
+            <p>
+              Die Browser-App sendet nur den ausgewählten Arbeitskontext an den lokalen oder gehosteten
+              Backend-Endpunkt <span className="font-mono">/api/ai</span>. Der Backend-Proxy ruft danach
+              serverseitig die Anthropic Messages API auf. Dadurch bleibt der API-Key vor dem Browser
+              verborgen.
+            </p>
+            <p>Mit der API sind in SMART Focus diese Leistungen verbunden:</p>
+            <ul className="grid gap-1 md:grid-cols-2">
+              <li>Freitext in Kanban-Karten umwandeln</li>
+              <li>Aufgaben priorisieren</li>
+              <li>Pomodoro-Schätzungen vorschlagen</li>
+              <li>Tagesplan aus offenen Karten erzeugen</li>
+              <li>Wochenrückblick formulieren</li>
+              <li>Zeitfresser aus Sessions erkennen</li>
+              <li>Fokus-Empfehlungen geben</li>
+              <li>Kartenbeschreibungen verbessern</li>
+              <li>Aufgaben in kleinere Schritte zerlegen</li>
+              <li>Projektzusammenfassungen erstellen</li>
+            </ul>
+            <p>
+              Wichtig: KI-Vorschläge werden immer als Vorschau angezeigt. Es wird nichts automatisch
+              gespeichert, bis du einen Vorschlag bewusst übernimmst.
             </p>
           </div>
         </div>
