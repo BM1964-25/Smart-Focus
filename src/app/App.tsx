@@ -17,11 +17,12 @@ export const App = (): JSX.Element => {
   const [view, setView] = useState<ViewKey>('dashboard');
   const theme = useSettingsStore((state) => state.settings.theme);
   const shellClass = useMemo(() => (theme === 'dark' ? 'dark' : ''), [theme]);
+  const showPomodoroTimer = view === 'dashboard' || view === 'kanban' || view === 'planner';
 
   return (
     <div className={shellClass}>
       <AppShell activeView={view} onNavigate={setView}>
-        <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_360px]">
+        <div className={showPomodoroTimer ? 'grid gap-5 xl:grid-cols-[minmax(0,1fr)_360px]' : ''}>
           <main>
             {view === 'dashboard' && <Dashboard />}
             {view === 'kanban' && <KanbanBoard />}
@@ -30,9 +31,11 @@ export const App = (): JSX.Element => {
             {view === 'importExport' && <ImportExportView />}
             {view === 'settings' && <SettingsView />}
           </main>
-          <aside className="space-y-5">
-            <PomodoroTimer />
-          </aside>
+          {showPomodoroTimer && (
+            <aside className="space-y-5">
+              <PomodoroTimer />
+            </aside>
+          )}
         </div>
       </AppShell>
     </div>
