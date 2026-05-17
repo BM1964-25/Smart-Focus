@@ -19,22 +19,25 @@ export const Dashboard = (): JSX.Element => {
   };
 
   const cards = [
-    ['Fokuszeit heute', `${stats.focusMinutesToday} min`],
-    ['Fokuszeit diese Woche', `${stats.focusMinutesWeek} min`],
-    ['Pomodoros heute', stats.pomodorosToday],
-    ['Erledigte Karten heute', stats.completedTasksToday],
-    ['Unterbrechungen heute', stats.interruptions]
+    { labelLines: ['Fokuszeit', 'heute'], value: `${stats.focusMinutesToday} min` },
+    { labelLines: ['Fokuszeit', 'diese Woche'], value: `${stats.focusMinutesWeek} min` },
+    { labelLines: ['Pomodoros', 'heute'], value: stats.pomodorosToday },
+    { labelLines: ['Erledigte Karten', 'heute'], value: stats.completedTasksToday },
+    { labelLines: ['Unterbrechungen', 'heute'], value: stats.interruptions }
   ];
 
   return (
     <div className="space-y-5">
       <h1 className="text-2xl font-semibold">Dashboard</h1>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
-        {cards.map(([label, value]) => (
-          <Panel className="flex min-h-20 items-center justify-center px-3 py-3 text-center" key={label}>
+        {cards.map((card) => (
+          <Panel className="flex min-h-24 items-center justify-center px-3 py-3 text-center" key={card.labelLines.join(' ')}>
             <div>
-              <p className="text-xs font-medium leading-4 text-slate-500">{label}</p>
-              <p className="mt-1 text-xl font-semibold leading-6">{value}</p>
+              <p className="text-xs font-medium leading-4 text-slate-500">
+                <span className="block">{card.labelLines[0]}</span>
+                <span className="block">{card.labelLines[1]}</span>
+              </p>
+              <p className="mt-1 text-xl font-semibold leading-6">{card.value}</p>
             </div>
           </Panel>
         ))}
