@@ -20,7 +20,7 @@ const sections = [
   {
     icon: Upload,
     title: '4. Kalenderimport',
-    text: 'ICS-Kalenderdateien werden zuerst nur als Planungskontext angezeigt. Es wird nichts automatisch gespeichert. Erst wenn du einzelne Termine oder ausgewählte Termine übernimmst, werden daraus Aufgaben.'
+    text: 'ICS-Kalenderdateien werden zuerst nur als Planungskontext angezeigt. Es wird nichts automatisch gespeichert. Kalendertermine sind Zeitblöcke, aber nicht automatisch Aufgaben. Erst wenn du einzelne Termine oder ausgewählte Termine ausdrücklich übernimmst, werden daraus Kanban-Karten.'
   },
   {
     icon: Brain,
@@ -76,6 +76,36 @@ export const HelpView = (): JSX.Element => (
         );
       })}
     </div>
+    <Panel>
+      <div className="flex items-start gap-3">
+        <Upload className="mt-1 text-accent" size={22} />
+        <div>
+          <h2 className="font-semibold">Kalenderimport und #aufgabe</h2>
+          <div className="mt-2 space-y-3 text-sm leading-6 text-slate-600 dark:text-slate-300">
+            <p>
+              Beim Import einer ICS-Datei liest SMART Focus Termine aus Apple Kalender, Outlook oder
+              Google Calendar. Diese Termine erscheinen zunächst nur in einer Vorschau. Sie werden
+              nicht automatisch ins Kanban übernommen, damit Meetings, Arzttermine oder private
+              Zeitblöcke nicht fälschlich als Aufgaben erscheinen.
+            </p>
+            <p>
+              Die Besonderheit von <span className="font-mono">#aufgabe</span>: Wenn du im Kalender
+              einen Termin bewusst als Aufgabe markieren willst, kannst du den Begriff{' '}
+              <span className="font-mono">#aufgabe</span> im Titel oder in der Beschreibung verwenden.
+              Solche Termine sind fachlich Aufgaben-Kandidaten. Sie sollten in der Vorschau geprüft
+              und dann gezielt mit <span className="font-medium">Als Aufgabe</span> oder{' '}
+              <span className="font-medium">Ausgewählte als Aufgaben übernehmen</span> in die Inbox
+              übernommen werden.
+            </p>
+            <p>
+              Beispiel: <span className="font-mono">#aufgabe Angebot Müller prüfen</span> ist eine
+              echte Aufgabe. <span className="font-mono">Termin Bauherr 10:00</span> ist dagegen
+              zunächst nur ein Kalenderblock und bleibt Kontext, bis du ihn ausdrücklich übernimmst.
+            </p>
+          </div>
+        </div>
+      </div>
+    </Panel>
     <Panel>
       <h2 className="font-semibold">Empfohlener Ablauf</h2>
       <ol className="mt-3 grid gap-2 text-sm leading-6 text-slate-600 dark:text-slate-300 md:grid-cols-2">
