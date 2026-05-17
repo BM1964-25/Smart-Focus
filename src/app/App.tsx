@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { AppShell } from '../components/AppShell';
 import { Dashboard } from '../features/dashboard/Dashboard';
+import { HelpView } from '../features/help/HelpView';
 import { ImportExportView } from '../features/importExport/ImportExportView';
 import { KanbanBoard } from '../features/kanban/KanbanBoard';
 import { DailyPlanner } from '../features/planner/DailyPlanner';
@@ -10,7 +11,7 @@ import { SettingsView } from '../features/settings/SettingsView';
 import { useInitialData } from '../hooks/useInitialData';
 import { useSettingsStore } from '../stores/settingsStore';
 
-export type ViewKey = 'dashboard' | 'kanban' | 'planner' | 'reports' | 'importExport' | 'settings';
+export type ViewKey = 'dashboard' | 'kanban' | 'planner' | 'reports' | 'importExport' | 'settings' | 'help';
 
 export const App = (): JSX.Element => {
   useInitialData();
@@ -21,7 +22,11 @@ export const App = (): JSX.Element => {
 
   return (
     <div className={shellClass}>
-      <AppShell activeView={view} showAiAssistant={view !== 'importExport' && view !== 'settings'} onNavigate={setView}>
+      <AppShell
+        activeView={view}
+        showAiAssistant={view !== 'importExport' && view !== 'settings' && view !== 'help'}
+        onNavigate={setView}
+      >
         <div className={showPomodoroTimer ? 'grid gap-5 xl:grid-cols-[minmax(0,1fr)_360px]' : ''}>
           <main>
             {view === 'dashboard' && <Dashboard />}
@@ -30,6 +35,7 @@ export const App = (): JSX.Element => {
             {view === 'reports' && <ReportsView />}
             {view === 'importExport' && <ImportExportView />}
             {view === 'settings' && <SettingsView />}
+            {view === 'help' && <HelpView />}
           </main>
           {showPomodoroTimer && (
             <aside className="space-y-5">

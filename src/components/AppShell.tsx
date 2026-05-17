@@ -1,4 +1,4 @@
-import { BarChart3, CalendarDays, KanbanSquare, Settings, Upload, Workflow } from 'lucide-react';
+import { BarChart3, CalendarDays, HelpCircle, KanbanSquare, Settings, Upload, Workflow } from 'lucide-react';
 import { useState } from 'react';
 import type { ViewKey } from '../app/App';
 import { AiAssistantPanel } from '../features/ai/AiAssistantPanel';
@@ -18,7 +18,8 @@ const navItems = [
   { key: 'planner', label: 'Tagesplanung', icon: CalendarDays },
   { key: 'reports', label: 'Reports', icon: Workflow },
   { key: 'importExport', label: 'Import/Export', icon: Upload },
-  { key: 'settings', label: 'Einstellungen', icon: Settings }
+  { key: 'settings', label: 'Einstellungen', icon: Settings },
+  { key: 'help', label: 'Hilfe', icon: HelpCircle }
 ] satisfies Array<{ key: ViewKey; label: string; icon: typeof BarChart3 }>;
 
 export const AppShell = ({ activeView, showAiAssistant, onNavigate, children }: Props): JSX.Element => {
@@ -41,10 +42,10 @@ export const AppShell = ({ activeView, showAiAssistant, onNavigate, children }: 
         />
         <div className="min-w-0">
           <Topbar />
-            <div className="mx-auto max-w-[1600px] space-y-5 px-4 py-5 sm:px-6 lg:px-8">
-              {children}
-              {showAiAssistant && <AiAssistantPanel />}
-            </div>
+          <div className="mx-auto max-w-[1600px] space-y-5 px-4 py-5 sm:px-6 lg:px-8">
+            {children}
+            {showAiAssistant && <AiAssistantPanel />}
+          </div>
         </div>
       </div>
     </div>
