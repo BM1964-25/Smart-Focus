@@ -22,7 +22,7 @@ export const Sidebar = ({
       collapsed ? 'w-[76px]' : 'w-full'
     }`}
   >
-    <div className={`mb-8 flex items-start ${collapsed ? 'justify-center' : 'justify-between gap-3'}`}>
+    <div className={`mb-6 ${collapsed ? 'hidden' : 'block'}`}>
       {!collapsed && (
         <div className="min-w-0">
           <h1 className="text-2xl font-semibold leading-7">SMART Focus</h1>
@@ -31,9 +31,13 @@ export const Sidebar = ({
           </p>
         </div>
       )}
+    </div>
+    <div className={`mb-2 flex ${collapsed ? 'justify-center' : 'justify-start'}`}>
       <button
         type="button"
-        className="rounded-md border border-line p-2 text-slate-500 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+        className={`rounded-md border border-line p-2 text-slate-500 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800 ${
+          collapsed ? '' : 'ml-3'
+        }`}
         onClick={onToggleCollapsed}
         aria-label={collapsed ? 'Sidebar ausklappen' : 'Sidebar einklappen'}
         title={collapsed ? 'Sidebar ausklappen' : 'Sidebar einklappen'}
