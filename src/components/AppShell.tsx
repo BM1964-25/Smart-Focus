@@ -7,6 +7,7 @@ import { Topbar } from './Topbar';
 
 interface Props {
   activeView: ViewKey;
+  showAiAssistant: boolean;
   onNavigate: (view: ViewKey) => void;
   children: React.ReactNode;
 }
@@ -20,7 +21,7 @@ const navItems = [
   { key: 'settings', label: 'Einstellungen', icon: Settings }
 ] satisfies Array<{ key: ViewKey; label: string; icon: typeof BarChart3 }>;
 
-export const AppShell = ({ activeView, onNavigate, children }: Props): JSX.Element => {
+export const AppShell = ({ activeView, showAiAssistant, onNavigate, children }: Props): JSX.Element => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   return (
@@ -40,10 +41,10 @@ export const AppShell = ({ activeView, onNavigate, children }: Props): JSX.Eleme
         />
         <div className="min-w-0">
           <Topbar />
-          <div className="mx-auto max-w-[1600px] space-y-5 px-4 py-5 sm:px-6 lg:px-8">
-            {children}
-            <AiAssistantPanel />
-          </div>
+            <div className="mx-auto max-w-[1600px] space-y-5 px-4 py-5 sm:px-6 lg:px-8">
+              {children}
+              {showAiAssistant && <AiAssistantPanel />}
+            </div>
         </div>
       </div>
     </div>

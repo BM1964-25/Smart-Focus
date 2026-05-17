@@ -21,7 +21,7 @@ export const App = (): JSX.Element => {
 
   return (
     <div className={shellClass}>
-      <AppShell activeView={view} onNavigate={setView}>
+      <AppShell activeView={view} showAiAssistant={view !== 'importExport' && view !== 'settings'} onNavigate={setView}>
         <div className={showPomodoroTimer ? 'grid gap-5 xl:grid-cols-[minmax(0,1fr)_360px]' : ''}>
           <main>
             {view === 'dashboard' && <Dashboard />}
