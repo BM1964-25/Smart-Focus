@@ -13,6 +13,15 @@ npm run dev
 Frontend: `http://127.0.0.1:5173`  
 Backend-Proxy: `http://127.0.0.1:8787`
 
+## GitHub Pages
+
+Die statische Frontend-App wird per GitHub Actions aus `main` nach GitHub Pages deployed.
+Der Pages-Link ist nach erfolgreichem Workflow unter den Repository-Einstellungen oder in der
+Actions-Deployment-Ausgabe sichtbar.
+
+Hinweis: GitHub Pages hostet nur das Frontend. Der Anthropic-Proxy unter `server/` muss für echte
+KI-Aufrufe separat auf einem Node-fähigen Backend laufen.
+
 ## Anthropic API-Key
 
 Der Key wird ausschließlich vom Backend gelesen:
