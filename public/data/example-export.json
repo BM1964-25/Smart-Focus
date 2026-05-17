@@ -1,0 +1,45 @@
+{
+  "schemaVersion": "1.0.0",
+  "exportedAt": "2026-05-17T10:00:00.000Z",
+  "app": "Pomodoro Kanban Time Manager",
+  "projects": [
+    {
+      "id": "project_builtsmart",
+      "name": "BuiltSmart Hub",
+      "client": "Intern",
+      "color": "#2563eb",
+      "archived": false,
+      "createdAt": "2026-05-17T08:00:00.000Z",
+      "updatedAt": "2026-05-17T08:00:00.000Z"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task_offer_review",
+      "title": "Angebot Müller prüfen",
+      "description": "Leistungsumfang, Risiken und offene Annahmen prüfen.",
+      "status": "focus",
+      "priority": "high",
+      "projectId": "project_builtsmart",
+      "estimatedPomodoros": 2,
+      "completedPomodoros": 0,
+      "tags": ["angebot", "prüfung"],
+      "createdAt": "2026-05-17T08:00:00.000Z",
+      "updatedAt": "2026-05-17T08:00:00.000Z",
+      "archived": false
+    }
+  ],
+  "sessions": [],
+  "tags": ["angebot", "prüfung"],
+  "settings": {
+    "schemaVersion": "1.0.0",
+    "focusMinutes": 25,
+    "shortBreakMinutes": 5,
+    "longBreakMinutes": 15,
+    "longBreakEvery": 4,
+    "notificationsEnabled": false,
+    "soundEnabled": false,
+    "theme": "system",
+    "aiModel": "claude-3-5-sonnet-latest"
+  }
+}
