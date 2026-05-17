@@ -35,8 +35,8 @@ export const Sidebar = ({
     <div className={`mb-2 flex ${collapsed ? 'justify-center' : 'justify-start'}`}>
       <button
         type="button"
-        className={`rounded-md border border-line p-2 text-slate-500 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800 ${
-          collapsed ? '' : 'ml-3'
+        className={`rounded-md p-2 text-slate-500 transition hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 ${
+          collapsed ? '' : 'ml-1'
         }`}
         onClick={onToggleCollapsed}
         aria-label={collapsed ? 'Sidebar ausklappen' : 'Sidebar einklappen'}
