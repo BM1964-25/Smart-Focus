@@ -1,8 +1,10 @@
+import { useMemo } from 'react';
 import { Panel } from '../../components/ui';
 import { useTaskStore } from '../../stores/taskStore';
 
 export const TagManager = (): JSX.Element => {
-  const tags = [...new Set(useTaskStore((state) => state.tasks.flatMap((task) => task.tags)))].sort();
+  const tasks = useTaskStore((state) => state.tasks);
+  const tags = useMemo(() => [...new Set(tasks.flatMap((task) => task.tags))].sort(), [tasks]);
   return (
     <Panel>
       <h2 className="mb-3 font-semibold">Tags</h2>

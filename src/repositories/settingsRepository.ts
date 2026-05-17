@@ -10,13 +10,14 @@ export const defaultSettings: AppSettings = {
   notificationsEnabled: false,
   soundEnabled: false,
   theme: 'system',
-  aiModel: 'claude-3-5-sonnet-latest'
+  aiModel: 'claude-3-5-sonnet-latest',
+  licenseKey: ''
 };
 
 export const settingsRepository = {
   async get(): Promise<AppSettings> {
     const db = await getDb();
-    return (await db.get('settings', '1.0.0')) ?? defaultSettings;
+    return { ...defaultSettings, ...((await db.get('settings', '1.0.0')) ?? {}) };
   },
   async put(settings: AppSettings): Promise<void> {
     const db = await getDb();

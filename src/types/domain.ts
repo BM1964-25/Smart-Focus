@@ -59,6 +59,7 @@ export interface AppSettings {
   soundEnabled: boolean;
   theme: 'light' | 'dark' | 'system';
   aiModel: string;
+  licenseKey: string;
 }
 
 export interface AppExport {

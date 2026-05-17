@@ -29,7 +29,8 @@ describe('JSON export and import', () => {
         notificationsEnabled: false,
         soundEnabled: false,
         theme: 'system',
-        aiModel: 'claude-3-5-sonnet-latest'
+        aiModel: 'claude-3-5-sonnet-latest',
+        licenseKey: ''
       }
     };
     const preview = await validateImport(payload);

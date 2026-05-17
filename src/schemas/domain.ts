@@ -51,7 +51,8 @@ export const settingsSchema = z.object({
   notificationsEnabled: z.boolean(),
   soundEnabled: z.boolean(),
   theme: z.enum(['light', 'dark', 'system']),
-  aiModel: z.string().min(1)
+  aiModel: z.string().min(1),
+  licenseKey: z.string().default('')
 });
 
 export const appExportSchema = z.object({
