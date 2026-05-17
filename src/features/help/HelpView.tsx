@@ -1,4 +1,15 @@
-import { BookOpen, Brain, CalendarDays, Database, KanbanSquare, KeyRound, Timer, Upload } from 'lucide-react';
+import {
+  AlertTriangle,
+  BookOpen,
+  Brain,
+  CalendarDays,
+  Database,
+  KanbanSquare,
+  KeyRound,
+  ShieldCheck,
+  Timer,
+  Upload
+} from 'lucide-react';
 import { Panel } from '../../components/ui';
 
 const sections = [
@@ -40,7 +51,7 @@ const sections = [
   {
     icon: KeyRound,
     title: '8. Anthropic API',
-    text: 'Die KI-Funktionen nutzen die Anthropic Messages API über einen Backend-Proxy. Dafür wird ein Anthropic-Konto mit API-Key benötigt. Der Schlüssel wird serverseitig als ANTHROPIC_API_KEY hinterlegt und darf nicht in den Browser oder in GitHub Pages eingetragen werden.'
+    text: 'Die KI-Funktionen nutzen die Anthropic Messages API über einen Backend-Proxy. Dafür wird ein Anthropic-Konto mit API-Key benötigt. Der Schlüssel wird serverseitig als ANTHROPIC_API_KEY hinterlegt und darf nicht in den Browser eingetragen werden.'
   }
 ];
 
@@ -64,6 +75,17 @@ export const HelpView = (): JSX.Element => (
           </p>
         </div>
       </div>
+    </Panel>
+    <Panel>
+      <h2 className="font-semibold">Erste Schritte</h2>
+      <ol className="mt-3 grid gap-2 text-sm leading-6 text-slate-600 dark:text-slate-300 md:grid-cols-2">
+        <li>1. Lege eine Aufgabe an oder sammle Aufgaben in der Inbox.</li>
+        <li>2. Ziehe wichtige Aufgaben nach Heute.</li>
+        <li>3. Ziehe genau eine Aufgabe in die Fokus-Spalte.</li>
+        <li>4. Starte den Pomodoro-Timer.</li>
+        <li>5. Schließe die Session ab, damit Fokuszeit und Pomodoros gezählt werden.</li>
+        <li>6. Exportiere regelmäßig JSON als Datensicherung.</li>
+      </ol>
     </Panel>
     <div className="grid gap-4 xl:grid-cols-2">
       {sections.map((section) => {
@@ -112,6 +134,37 @@ export const HelpView = (): JSX.Element => (
       </div>
     </Panel>
     <Panel>
+      <h2 className="font-semibold">Aufgabe oder Kalendertermin?</h2>
+      <div className="mt-3 overflow-x-auto">
+        <table className="w-full text-left text-sm">
+          <thead className="text-slate-500">
+            <tr>
+              <th className="py-2">Eintrag</th>
+              <th>Bedeutung</th>
+              <th>Empfehlung</th>
+            </tr>
+          </thead>
+          <tbody className="text-slate-600 dark:text-slate-300">
+            <tr className="border-t border-line dark:border-slate-800">
+              <td className="py-2 font-medium">Kalendertermin</td>
+              <td>Zeitblock oder Kontext</td>
+              <td>Nicht automatisch übernehmen</td>
+            </tr>
+            <tr className="border-t border-line dark:border-slate-800">
+              <td className="py-2 font-medium">#aufgabe im Termin</td>
+              <td>Aufgaben-Kandidat</td>
+              <td>In der Vorschau prüfen und gezielt übernehmen</td>
+            </tr>
+            <tr className="border-t border-line dark:border-slate-800">
+              <td className="py-2 font-medium">Kanban-Karte</td>
+              <td>Konkrete Arbeitseinheit</td>
+              <td>Nach Heute/Fokus verschieben und mit Pomodoro bearbeiten</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </Panel>
+    <Panel>
       <div className="flex items-start gap-3">
         <Brain className="mt-1 text-accent" size={22} />
         <div>
@@ -120,7 +173,7 @@ export const HelpView = (): JSX.Element => (
             <p>
               Für die KI-Funktionen wird ein Anthropic-Konto benötigt. Nach der Anmeldung bei Anthropic
               wird im Anthropic Console-Bereich ein API-Key erzeugt. Dieser Schlüssel gehört nicht in
-              die App-Oberfläche und nicht in GitHub Pages, sondern ausschließlich in den Backend-Proxy
+              die App-Oberfläche, sondern ausschließlich in den Backend-Proxy
               als Umgebungsvariable <span className="font-mono">ANTHROPIC_API_KEY</span>.
             </p>
             <p>
@@ -146,6 +199,78 @@ export const HelpView = (): JSX.Element => (
               Wichtig: KI-Vorschläge werden immer als Vorschau angezeigt. Es wird nichts automatisch
               gespeichert, bis du einen Vorschlag bewusst übernimmst.
             </p>
+          </div>
+        </div>
+      </div>
+    </Panel>
+    <div className="grid gap-4 xl:grid-cols-2">
+      <Panel>
+        <div className="flex items-start gap-3">
+          <Database className="mt-1 text-accent" size={20} />
+          <div>
+            <h2 className="font-semibold">Lokale Daten und Sicherung</h2>
+            <div className="mt-2 space-y-2 text-sm leading-6 text-slate-600 dark:text-slate-300">
+              <p>
+                Aufgaben, Projekte, Sessions, Einstellungen und Lizenzschlüssel werden lokal im Browser
+                in IndexedDB gespeichert. Sie sind an diesen Browser und dieses Benutzerprofil gebunden.
+              </p>
+              <p>
+                Wenn Browserdaten gelöscht werden, können lokale Daten verloren gehen. Nutze deshalb
+                regelmäßig den JSON-Export als vollständige Sicherung.
+              </p>
+              <p>
+                JSON ist die Datensicherung der App. ICS ist nur ein Kalenderimport und ersetzt keine
+                vollständige Sicherung.
+              </p>
+            </div>
+          </div>
+        </div>
+      </Panel>
+      <Panel>
+        <div className="flex items-start gap-3">
+          <ShieldCheck className="mt-1 text-accent" size={20} />
+          <div>
+            <h2 className="font-semibold">Datenschutz und Grenzen</h2>
+            <div className="mt-2 space-y-2 text-sm leading-6 text-slate-600 dark:text-slate-300">
+              <p>
+                Ohne KI-Aufruf bleiben Arbeitsdaten lokal im Browser. Beim KI-Aufruf wird nur der
+                ausgewählte Arbeitskontext an den Backend-Proxy gesendet.
+              </p>
+              <p>
+                KI-Funktionen brauchen einen erreichbaren Backend-Proxy mit{' '}
+                <span className="font-mono">ANTHROPIC_API_KEY</span>.
+              </p>
+              <p>
+                Der Lizenzschlüssel wird aktuell lokal gespeichert. Eine Online-Aktivierung oder
+                Serverprüfung ist noch nicht implementiert.
+              </p>
+            </div>
+          </div>
+        </div>
+      </Panel>
+    </div>
+    <Panel>
+      <div className="flex items-start gap-3">
+        <AlertTriangle className="mt-1 text-warn" size={22} />
+        <div>
+          <h2 className="font-semibold">Fehlerbehebung</h2>
+          <div className="mt-3 grid gap-3 text-sm leading-6 text-slate-600 dark:text-slate-300 md:grid-cols-2">
+            <div>
+              <p className="font-medium text-ink dark:text-slate-100">Weiße Seite</p>
+              <p>Seite neu laden und prüfen, ob der lokale Dev-Server unter localhost erreichbar ist.</p>
+            </div>
+            <div>
+              <p className="font-medium text-ink dark:text-slate-100">KI antwortet nicht</p>
+              <p>Backend-Proxy starten und <span className="font-mono">ANTHROPIC_API_KEY</span> setzen.</p>
+            </div>
+            <div>
+              <p className="font-medium text-ink dark:text-slate-100">Pomodoro startet nicht</p>
+              <p>Es muss genau eine Karte in der Fokus-Spalte liegen.</p>
+            </div>
+            <div>
+              <p className="font-medium text-ink dark:text-slate-100">Kalenderdaten mehrfach importiert</p>
+              <p>Import/Export öffnen und Kalender-Einträge oder alle Aufgaben bereinigen.</p>
+            </div>
           </div>
         </div>
       </div>
