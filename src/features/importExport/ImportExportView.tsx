@@ -188,6 +188,19 @@ export const ImportExportView = (): JSX.Element => {
     setMessage(`${calendarImportedTasks.length} Kalender-Einträge wurden gelöscht.`);
   };
 
+  const deleteAllTasks = async (): Promise<void> => {
+    if (tasks.length === 0) {
+      setMessage('Es gibt aktuell keine Aufgaben zum Löschen.');
+      return;
+    }
+    const confirmed = window.confirm(
+      `${tasks.length} Aufgaben löschen? Bestehende Pomodoro-Sessions bleiben im Verlauf erhalten.`
+    );
+    if (!confirmed) return;
+    await deleteTasks(tasks.map((task) => task.id));
+    setMessage(`${tasks.length} Aufgaben wurden gelöscht.`);
+  };
+
   return (
     <div className="space-y-5">
       <h1 className="text-2xl font-semibold">Import und Export</h1>
@@ -216,6 +229,14 @@ export const ImportExportView = (): JSX.Element => {
           </Button>
           <span className="text-sm text-slate-500 dark:text-slate-400">
             {calendarImportedTasks.length} importierte Kalender-Einträge vorhanden
+          </span>
+        </div>
+        <div className="mb-3 flex flex-wrap items-center gap-2">
+          <Button disabled={tasks.length === 0} variant="danger" onClick={() => void deleteAllTasks()}>
+            <Trash2 size={16} className="mr-2 inline" /> Alle Aufgaben löschen
+          </Button>
+          <span className="text-sm text-slate-500 dark:text-slate-400">
+            Entfernt auch alte importierte Überschriften aus Dashboard und Tagesplanung.
           </span>
         </div>
         <div className="mb-3 grid gap-3 rounded-md border border-line bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-950 lg:grid-cols-[220px_1fr]">
