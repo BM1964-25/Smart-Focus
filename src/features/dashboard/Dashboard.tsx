@@ -29,12 +29,12 @@ export const Dashboard = (): JSX.Element => {
   return (
     <div className="space-y-5">
       <h1 className="text-2xl font-semibold">Dashboard</h1>
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
         {cards.map(([label, value]) => (
-          <Panel className="flex min-h-20 items-center justify-center text-center" key={label}>
-            <div className="flex flex-wrap items-baseline justify-center gap-x-2 gap-y-1">
-              <span className="text-sm text-slate-500">{label}</span>
-              <span className="text-xl font-semibold">{value}</span>
+          <Panel className="flex min-h-20 items-center justify-center px-3 py-3 text-center" key={label}>
+            <div>
+              <p className="text-xs font-medium leading-4 text-slate-500">{label}</p>
+              <p className="mt-1 text-xl font-semibold leading-6">{value}</p>
             </div>
           </Panel>
         ))}
