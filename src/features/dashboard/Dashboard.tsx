@@ -1,4 +1,4 @@
-import { Trash2 } from 'lucide-react';
+import { CheckCircle2, Clock3, Hourglass, TimerReset, Trash2, Zap } from 'lucide-react';
 import { Panel } from '../../components/ui';
 import { calculateDashboardStats } from '../../services/reportingService';
 import { useProjectStore } from '../../stores/projectStore';
@@ -19,28 +19,31 @@ export const Dashboard = (): JSX.Element => {
   };
 
   const cards = [
-    { labelLines: ['Fokuszeit', 'heute'], value: `${stats.focusMinutesToday} min` },
-    { labelLines: ['Fokuszeit', 'diese Woche'], value: `${stats.focusMinutesWeek} min` },
-    { labelLines: ['Pomodoros', 'heute'], value: stats.pomodorosToday },
-    { labelLines: ['Erledigte Karten', 'heute'], value: stats.completedTasksToday },
-    { labelLines: ['Unterbrechungen', 'heute'], value: stats.interruptions }
+    { icon: Zap, label: 'Fokuszeit heute', value: `${stats.focusMinutesToday} min` },
+    { icon: Clock3, label: 'Fokuszeit diese Woche', value: `${stats.focusMinutesWeek} min` },
+    { icon: TimerReset, label: 'Pomodoros heute', value: stats.pomodorosToday },
+    { icon: CheckCircle2, label: 'Erledigte Karten heute', value: stats.completedTasksToday },
+    { icon: Hourglass, label: 'Unterbrechungen heute', value: stats.interruptions }
   ];
 
   return (
     <div className="space-y-5">
       <h1 className="text-2xl font-semibold">Dashboard</h1>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
-        {cards.map((card) => (
-          <Panel className="flex min-h-24 items-center justify-center px-3 py-3 text-center" key={card.labelLines.join(' ')}>
-            <div>
-              <p className="text-xs font-medium leading-4 text-slate-500">
-                <span className="block">{card.labelLines[0]}</span>
-                <span className="block">{card.labelLines[1]}</span>
+        {cards.map((card) => {
+          const Icon = card.icon;
+          return (
+          <Panel className="flex min-h-28 items-center justify-center px-3 py-3" key={card.label}>
+            <div className="flex flex-col items-center text-center">
+              <Icon className="h-5 w-5 shrink-0 text-accent" strokeWidth={2} aria-hidden />
+              <p className="mt-2 whitespace-nowrap text-xs font-medium leading-4 text-slate-500">
+                {card.label}
               </p>
-              <p className="mt-1 text-xl font-semibold leading-6">{card.value}</p>
+              <p className="mt-1 text-2xl font-semibold leading-7">{card.value}</p>
             </div>
           </Panel>
-        ))}
+          );
+        })}
       </div>
       <div className="grid gap-4 xl:grid-cols-2">
         <Panel>
@@ -58,10 +61,10 @@ export const Dashboard = (): JSX.Element => {
         <Panel>
           <h2 className="mb-3 font-semibold">Geschätzte versus erledigte Pomodoros</h2>
           <div className="space-y-2">
-            {stats.estimateVsActual.slice(0, 8).map((row) => (
+            {stats.estimateVsActual.slice(0, 8).map((row, index) => (
               <div
                 className="flex items-center justify-between gap-3 border-b border-line py-2 text-sm dark:border-slate-800"
-                key={row.taskId}
+                key={`${row.taskId}-${index}`}
               >
                 <span className="min-w-0 flex-1 truncate">{row.taskTitle}</span>
                 <span className="shrink-0">{row.estimated} / {row.actual} Pomo</span>

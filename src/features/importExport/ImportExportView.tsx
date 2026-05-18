@@ -1,4 +1,4 @@
-import { CalendarPlus, Download, Trash2, Upload } from 'lucide-react';
+import { CalendarPlus, Download, Info, Trash2, Upload } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Button, Panel } from '../../components/ui';
 import {
@@ -17,6 +17,14 @@ import { useTaskStore } from '../../stores/taskStore';
 import type { ImportMode } from '../../types/domain';
 
 type CalendarRangePreset = 'all' | 'today' | 'next7' | 'thisWeek' | 'nextWeek' | 'custom';
+
+const isTaskCandidate = (event: { title: string; description: string }): boolean =>
+  event.title.toLowerCase().includes('#aufgabe') || event.description.toLowerCase().includes('#aufgabe');
+
+const calendarKey = (event: { title: string; start?: string }): string => `${event.title}__${event.start ?? ''}`;
+
+const dateGroupLabel = (dateIso?: string): string =>
+  dateIso ? new Date(dateIso).toLocaleDateString('de-DE', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' }) : 'Ohne Datum';
 
 const downloadJson = (payload: unknown): void => {
   const url = URL.createObjectURL(
@@ -43,6 +51,7 @@ export const ImportExportView = (): JSX.Element => {
     date.setDate(date.getDate() + 7);
     return date.toISOString().slice(0, 10);
   });
+  const [lastBackupAt, setLastBackupAt] = useState(() => localStorage.getItem('smart-focus:last-json-export') ?? '');
   const createTasks = useTaskStore((state) => state.createTasks);
   const deleteTasks = useTaskStore((state) => state.deleteTasks);
   const tasks = useTaskStore((state) => state.tasks);
@@ -104,6 +113,25 @@ export const ImportExportView = (): JSX.Element => {
     });
   }, [calendarPreview?.events, calendarRange]);
 
+  const existingCalendarKeys = useMemo(
+    () =>
+      new Set(
+        tasks
+          .filter((task) => task.tags.includes('kalender'))
+          .map((task) => `${task.title}__${task.dueDate ?? ''}`)
+      ),
+    [tasks]
+  );
+
+  const groupedCalendarEvents = useMemo(() => {
+    const groups = new Map<string, typeof visibleCalendarEvents>();
+    for (const event of visibleCalendarEvents) {
+      const label = dateGroupLabel(event.start);
+      groups.set(label, [...(groups.get(label) ?? []), event]);
+    }
+    return [...groups.entries()];
+  }, [visibleCalendarEvents]);
+
   const previewImport = async (): Promise<void> => {
     try {
       setPreview(await validateImport(parseJsonImport(text)));
@@ -142,18 +170,23 @@ export const ImportExportView = (): JSX.Element => {
     const selectedEvents = visibleCalendarEvents.filter((event) =>
       selectedCalendarEventIds.includes(event.id)
     );
-    const existingCalendarKeys = new Set(
-      tasks
-        .filter((task) => task.tags.includes('kalender'))
-        .map((task) => `${task.title}__${task.dueDate ?? ''}`)
-    );
     const newEvents = selectedEvents.filter(
-      (event) => !existingCalendarKeys.has(`${event.title}__${event.start ?? ''}`)
+      (event) => !existingCalendarKeys.has(calendarKey(event))
     );
     await createTasks(newEvents.map(calendarEventToTask));
     const skipped = selectedEvents.length - newEvents.length;
     setMessage(
       `${newEvents.length} ausgewählte Kalendertermine wurden als Aufgaben in die Inbox übernommen.${skipped > 0 ? ` ${skipped} bereits vorhandene Termine wurden übersprungen.` : ''}`
+    );
+  };
+
+  const importTaskCandidateEvents = async (): Promise<void> => {
+    const candidates = visibleCalendarEvents.filter(isTaskCandidate);
+    const newEvents = candidates.filter((event) => !existingCalendarKeys.has(calendarKey(event)));
+    await createTasks(newEvents.map(calendarEventToTask));
+    const skipped = candidates.length - newEvents.length;
+    setMessage(
+      `${newEvents.length} #aufgabe-Termine wurden als Aufgaben übernommen.${skipped > 0 ? ` ${skipped} Dubletten wurden übersprungen.` : ''}`
     );
   };
 
@@ -163,8 +196,7 @@ export const ImportExportView = (): JSX.Element => {
     const alreadyExists = tasks.some(
       (task) =>
         task.tags.includes('kalender') &&
-        task.title === event.title &&
-        (task.dueDate ?? '') === (event.start ?? '')
+        calendarKey({ title: task.title, start: task.dueDate }) === calendarKey(event)
     );
     if (alreadyExists) {
       setMessage('Dieser Kalendertermin ist bereits als Aufgabe vorhanden.');
@@ -193,21 +225,47 @@ export const ImportExportView = (): JSX.Element => {
       setMessage('Es gibt aktuell keine Aufgaben zum Löschen.');
       return;
     }
-    const confirmed = window.confirm(
-      `${tasks.length} Aufgaben löschen? Bestehende Pomodoro-Sessions bleiben im Verlauf erhalten.`
+    const confirmation = window.prompt(
+      `${tasks.length} Aufgaben löschen? Bestehende Pomodoro-Sessions bleiben im Verlauf erhalten.\n\nBitte LÖSCHEN eingeben, um fortzufahren.`
     );
-    if (!confirmed) return;
+    if (confirmation !== 'LÖSCHEN') {
+      setMessage('Löschen abgebrochen. Es wurden keine Aufgaben entfernt.');
+      return;
+    }
     await deleteTasks(tasks.map((task) => task.id));
     setMessage(`${tasks.length} Aufgaben wurden gelöscht.`);
   };
+
+  const exportBackup = async (): Promise<void> => {
+    const payload = await createExport();
+    downloadJson(payload);
+    const timestamp = new Date().toISOString();
+    localStorage.setItem('smart-focus:last-json-export', timestamp);
+    setLastBackupAt(timestamp);
+    setMessage('JSON-Datensicherung wurde erstellt.');
+  };
+
+  const backupAgeDays = lastBackupAt
+    ? Math.floor((Date.now() - new Date(lastBackupAt).getTime()) / 86_400_000)
+    : undefined;
 
   return (
     <div className="space-y-5">
       <h1 className="text-2xl font-semibold">Import und Export</h1>
       <Panel>
-        <Button onClick={() => void createExport().then(downloadJson)}>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 className="font-semibold">Lokale Datensicherung</h2>
+            <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+              {lastBackupAt
+                ? `Letzter JSON-Export: ${new Date(lastBackupAt).toLocaleString()}${backupAgeDays !== undefined && backupAgeDays > 6 ? ' - Sicherung empfohlen.' : ''}`
+                : 'Noch keine JSON-Sicherung in diesem Browser erfasst.'}
+            </p>
+          </div>
+        <Button onClick={() => void exportBackup()}>
           <Download size={16} className="mr-2 inline" /> Vollständige Datensicherung exportieren
         </Button>
+        </div>
       </Panel>
       <Panel>
         <div className="mb-3 flex items-start justify-between gap-3">
@@ -218,6 +276,14 @@ export const ImportExportView = (): JSX.Element => {
             </p>
           </div>
           <CalendarPlus className="text-accent" size={20} />
+        </div>
+        <div className="mb-3 flex items-start gap-2 rounded-md border border-blue-200 bg-blue-50 p-3 text-sm leading-6 text-blue-900 dark:border-blue-900/60 dark:bg-blue-950/40 dark:text-blue-100">
+          <Info className="mt-0.5 shrink-0" size={16} />
+          <p>
+            Kalendertermine sind zunächst nur <span className="font-medium">Planungskontext</span>. Sie werden erst zu
+            Kanban-Aufgaben, wenn du sie bewusst auswählst und übernimmst. Termine mit{' '}
+            <span className="font-mono">#aufgabe</span> sind Aufgaben-Kandidaten und sollten bevorzugt geprüft werden.
+          </p>
         </div>
         <div className="mb-3 flex flex-wrap items-center gap-2">
           <Button
@@ -311,38 +377,71 @@ export const ImportExportView = (): JSX.Element => {
                   >
                     Ausgewählte als Aufgaben übernehmen
                   </Button>
+                  <Button
+                    disabled={visibleCalendarEvents.filter(isTaskCandidate).length === 0}
+                    variant="secondary"
+                    onClick={() => void importTaskCandidateEvents()}
+                  >
+                    Nur #aufgabe übernehmen
+                  </Button>
                 </div>
                 <div className="max-h-80 space-y-2 overflow-auto pr-1">
-                  {visibleCalendarEvents.map((event) => (
-                    <div
-                      className="flex gap-3 rounded-md border border-line bg-white p-3 text-sm dark:border-slate-700 dark:bg-slate-900"
-                      key={event.id}
-                    >
-                      <input
-                        checked={selectedCalendarEventIds.includes(event.id)}
-                        className="mt-1"
-                        type="checkbox"
-                        onChange={() => toggleCalendarEvent(event.id)}
-                      />
-                      <span className="min-w-0 flex-1">
-                        <span className="block font-medium">{event.title}</span>
-                        <span className="mt-1 block text-slate-500 dark:text-slate-400">
-                          {event.start ? new Date(event.start).toLocaleString() : 'Ohne Datum'} ·{' '}
-                          {event.estimatedPomodoros} Pomodoro
-                        </span>
-                        {event.description && (
-                          <span className="mt-1 line-clamp-2 block text-slate-500 dark:text-slate-400">
-                            {event.description}
-                          </span>
-                        )}
-                      </span>
-                      <Button
-                        className="self-start"
-                        variant="secondary"
-                        onClick={() => void importSingleCalendarEvent(event.id)}
-                      >
-                        Als Aufgabe
-                      </Button>
+                  {groupedCalendarEvents.map(([date, events]) => (
+                    <div className="space-y-2" key={date}>
+                      <h3 className="sticky top-0 z-10 rounded bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-500 dark:bg-slate-950 dark:text-slate-400">
+                        {date}
+                      </h3>
+                      {events.map((event) => {
+                        const duplicate = existingCalendarKeys.has(calendarKey(event));
+                        return (
+                          <div
+                            className="flex gap-3 rounded-md border border-line bg-white p-3 text-sm dark:border-slate-700 dark:bg-slate-900"
+                            key={event.id}
+                          >
+                            <input
+                              checked={selectedCalendarEventIds.includes(event.id)}
+                              className="mt-1"
+                              type="checkbox"
+                              onChange={() => toggleCalendarEvent(event.id)}
+                            />
+                            <span className="min-w-0 flex-1">
+                              <span className="flex flex-wrap items-center gap-2">
+                                <span className="font-medium">{event.title}</span>
+                                <span className="rounded bg-slate-100 px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-slate-500 dark:bg-slate-800 dark:text-slate-300">
+                                  Kalender-Kontext
+                                </span>
+                                {isTaskCandidate(event) && (
+                                  <span className="rounded bg-emerald-50 px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">
+                                    #aufgabe
+                                  </span>
+                                )}
+                                {duplicate && (
+                                  <span className="rounded bg-amber-50 px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-wide text-amber-700 dark:bg-amber-950 dark:text-amber-300">
+                                    Dublette
+                                  </span>
+                                )}
+                              </span>
+                              <span className="mt-1 block text-slate-500 dark:text-slate-400">
+                                {event.start ? new Date(event.start).toLocaleString() : 'Ohne Datum'} ·{' '}
+                                {event.estimatedPomodoros} Pomodoro
+                              </span>
+                              {event.description && (
+                                <span className="mt-1 line-clamp-2 block text-slate-500 dark:text-slate-400">
+                                  {event.description}
+                                </span>
+                              )}
+                            </span>
+                            <Button
+                              className="self-start"
+                              disabled={duplicate}
+                              variant="secondary"
+                              onClick={() => void importSingleCalendarEvent(event.id)}
+                            >
+                              Als Kanban-Aufgabe
+                            </Button>
+                          </div>
+                        );
+                      })}
                     </div>
                   ))}
                   {visibleCalendarEvents.length === 0 && (

@@ -24,7 +24,7 @@ app.use(
 app.use(express.json({ limit: '250kb' }));
 
 app.get('/api/health', (_request, response) => {
-  response.json({ ok: true });
+  response.json({ ok: true, aiConfigured: Boolean(process.env.ANTHROPIC_API_KEY) });
 });
 app.use('/api/ai', aiRoute);
 app.use(errorHandler);

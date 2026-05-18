@@ -24,7 +24,8 @@ const buildUserPrompt = (request: AiRequest): string =>
           : 'Erzeuge einen pruefbaren Vorschlag fuer den angefragten Zeitmanagement-Workflow.',
       text: request.text,
       projects: request.projects,
-      tasks: request.tasks
+      tasks: request.tasks,
+      sessions: request.sessions
     },
     null,
     2

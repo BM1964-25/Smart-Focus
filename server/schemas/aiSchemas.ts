@@ -17,7 +17,8 @@ export const aiRequestSchema = z.object({
   ]),
   text: z.string().max(8000).optional(),
   tasks: z.array(z.unknown()).max(80).optional(),
-  projects: z.array(z.unknown()).max(40).optional()
+  projects: z.array(z.unknown()).max(40).optional(),
+  sessions: z.array(z.unknown()).max(200).optional()
 });
 
 export const aiSuggestionResponseSchema = z.object({

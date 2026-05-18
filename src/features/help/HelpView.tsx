@@ -46,12 +46,12 @@ const sections = [
   {
     icon: KeyRound,
     title: '7. Lizenz und Sicherheit',
-    text: 'Der Lizenzschlüssel wird unter Einstellungen eingegeben und lokal im Browser gespeichert. Der Anthropic API-Key gehört niemals ins Frontend, sondern nur in den Backend-Proxy über ANTHROPIC_API_KEY.'
+    text: 'Der Lizenzschlüssel wird unter Einstellungen eingegeben und lokal im Browser gespeichert. Gib Lizenz- oder KI-Zugangsdaten nur in die dafür vorgesehenen Bereiche ein.'
   },
   {
     icon: KeyRound,
-    title: '8. Anthropic API',
-    text: 'Die KI-Funktionen nutzen die Anthropic Messages API über einen Backend-Proxy. Dafür wird ein Anthropic-Konto mit API-Key benötigt. Der Schlüssel wird serverseitig als ANTHROPIC_API_KEY hinterlegt und darf nicht in den Browser eingetragen werden.'
+    title: '8. KI-Zugang',
+    text: 'Für KI-Funktionen kann ein Anthropic-Zugang erforderlich sein. Die Einrichtung erfolgt je nach gekaufter Version oder Bereitstellung über den Anbieter beziehungsweise Administrator.'
   }
 ];
 
@@ -105,6 +105,60 @@ export const HelpView = (): JSX.Element => (
     </div>
     <Panel>
       <div className="flex items-start gap-3">
+        <KanbanSquare className="mt-1 text-accent" size={22} />
+        <div>
+          <h2 className="font-semibold">Kanban-Board bedienen</h2>
+          <div className="mt-2 space-y-3 text-sm leading-6 text-slate-600 dark:text-slate-300">
+            <p>
+              Das Kanban-Board ist die zentrale Aufgabenübersicht. Karten können per Drag-and-drop
+              zwischen den Spalten verschoben werden. Ein Klick auf eine Karte öffnet die Bearbeitung.
+              Das Papierkorb-Symbol auf einer Karte löscht sie nach Bestätigung.
+            </p>
+            <div className="grid gap-2 md:grid-cols-2">
+              <p><span className="font-medium text-ink dark:text-slate-100">Inbox:</span> neue, noch nicht eingeplante Aufgaben.</p>
+              <p><span className="font-medium text-ink dark:text-slate-100">Heute:</span> Aufgaben, die heute bearbeitet werden sollen.</p>
+              <p><span className="font-medium text-ink dark:text-slate-100">Fokus:</span> genau eine aktive Aufgabe für den nächsten Pomodoro.</p>
+              <p><span className="font-medium text-ink dark:text-slate-100">In Arbeit:</span> begonnene Aufgaben, die noch nicht fertig sind.</p>
+              <p><span className="font-medium text-ink dark:text-slate-100">Wartend:</span> Aufgaben, die von Rückmeldung, Termin oder Zuarbeit abhängen.</p>
+              <p><span className="font-medium text-ink dark:text-slate-100">Erledigt:</span> abgeschlossene Aufgaben, die archiviert werden können.</p>
+            </div>
+            <p>
+              Die Angaben auf einer Karte bedeuten: Priorität, erledigte/geplante Pomodoros, Projekt
+              und Tags. Beispiel: <span className="font-mono">medium · 0/2 Pomo · kalender</span>.
+            </p>
+            <p>
+              Über Suche, Sortierung und die Ansicht <span className="font-medium">Kompakt/Normal</span> kannst du große Boards schneller eingrenzen.
+              Die Filter zeigen unter anderem Heute, Kalender, Aufgaben ohne Projekt, hohe Priorität und archivierte Karten.
+            </p>
+          </div>
+        </div>
+      </div>
+    </Panel>
+    <Panel>
+      <div className="flex items-start gap-3">
+        <Timer className="mt-1 text-accent" size={22} />
+        <div>
+          <h2 className="font-semibold">Pomodoro abschließen</h2>
+          <div className="mt-2 space-y-3 text-sm leading-6 text-slate-600 dark:text-slate-300">
+            <p>
+              Beim Abschließen einer Session kannst du eine Notiz erfassen, einen Fokus-Score vergeben
+              und die Fokus-Aufgabe optional direkt als erledigt markieren.
+            </p>
+            <p>
+              Diese Zusatzdaten verbessern die Session-Historie, Reports und spätere KI-Auswertungen.
+              Ohne aktive Fokus-Karte kann kein Pomodoro gestartet werden.
+            </p>
+            <p>
+              Der Timer bietet drei Modi: <span className="font-medium">Fokus</span>,{' '}
+              <span className="font-medium">Kurzpause</span> und <span className="font-medium">Langpause</span>.
+              Pausen laufen ohne Kanban-Karte; Fokus-Sessions werden dagegen immer mit der aktiven Fokus-Karte verknüpft.
+            </p>
+          </div>
+        </div>
+      </div>
+    </Panel>
+    <Panel>
+      <div className="flex items-start gap-3">
         <Upload className="mt-1 text-accent" size={22} />
         <div>
           <h2 className="font-semibold">Kalenderimport und #aufgabe</h2>
@@ -123,6 +177,11 @@ export const HelpView = (): JSX.Element => (
               und dann gezielt mit <span className="font-medium">Als Aufgabe</span> oder{' '}
               <span className="font-medium">Ausgewählte als Aufgaben übernehmen</span> in die Inbox
               übernommen werden.
+            </p>
+            <p>
+              Die Vorschau ist nach Datum gruppiert. Dubletten werden gekennzeichnet. Mit{' '}
+              <span className="font-medium">Nur #aufgabe übernehmen</span> kannst du bewusst nur markierte
+              Aufgaben-Kandidaten importieren.
             </p>
             <p>
               Beispiel: <span className="font-mono">#aufgabe Angebot Müller prüfen</span> ist eine
@@ -168,21 +227,19 @@ export const HelpView = (): JSX.Element => (
       <div className="flex items-start gap-3">
         <Brain className="mt-1 text-accent" size={22} />
         <div>
-          <h2 className="font-semibold">Anthropic API und KI-Leistungen</h2>
+          <h2 className="font-semibold">KI-Zugang und KI-Leistungen</h2>
           <div className="mt-2 space-y-3 text-sm leading-6 text-slate-600 dark:text-slate-300">
             <p>
-              Für die KI-Funktionen wird ein Anthropic-Konto benötigt. Nach der Anmeldung bei Anthropic
-              wird im Anthropic Console-Bereich ein API-Key erzeugt. Dieser Schlüssel gehört nicht in
-              die App-Oberfläche, sondern ausschließlich in den Backend-Proxy
-              als Umgebungsvariable <span className="font-mono">ANTHROPIC_API_KEY</span>.
+              Die KI-Funktionen können je nach Version einen eingerichteten Anthropic-Zugang
+              benötigen. Falls die KI nicht bereits freigeschaltet ist, erhältst du die Zugangsdaten
+              oder Einrichtungshinweise vom Anbieter der Anwendung.
             </p>
             <p>
-              Die Browser-App sendet nur den ausgewählten Arbeitskontext an den lokalen oder gehosteten
-              Backend-Endpunkt <span className="font-mono">/api/ai</span>. Der Backend-Proxy ruft danach
-              serverseitig die Anthropic Messages API auf. Dadurch bleibt der API-Key vor dem Browser
-              verborgen.
+              Die App sendet bei einer KI-Anfrage nur den ausgewählten Arbeitskontext, zum Beispiel
+              offene Aufgaben oder eine markierte Beschreibung. Vorschläge werden anschließend in der
+              App als Vorschau angezeigt.
             </p>
-            <p>Mit der API sind in SMART Focus diese Leistungen verbunden:</p>
+            <p>Mit dem KI-Assistenten sind in SMART Focus diese Leistungen verbunden:</p>
             <ul className="grid gap-1 md:grid-cols-2">
               <li>Freitext in Kanban-Karten umwandeln</li>
               <li>Aufgaben priorisieren</li>
@@ -198,6 +255,10 @@ export const HelpView = (): JSX.Element => (
             <p>
               Wichtig: KI-Vorschläge werden immer als Vorschau angezeigt. Es wird nichts automatisch
               gespeichert, bis du einen Vorschlag bewusst übernimmst.
+            </p>
+            <p>
+              In der Vorschau kannst du einzelne vorgeschlagene Karten übernehmen, alle Karten übernehmen,
+              Textvorschläge kopieren oder die Vorschau verwerfen.
             </p>
           </div>
         </div>
@@ -222,6 +283,10 @@ export const HelpView = (): JSX.Element => (
                 JSON ist die Datensicherung der App. ICS ist nur ein Kalenderimport und ersetzt keine
                 vollständige Sicherung.
               </p>
+              <p>
+                Beim Export merkt sich SMART Focus im Browser den Zeitpunkt der letzten JSON-Sicherung.
+                Das Löschen aller Aufgaben muss zusätzlich durch Eingabe von <span className="font-mono">LÖSCHEN</span> bestätigt werden.
+              </p>
             </div>
           </div>
         </div>
@@ -234,11 +299,7 @@ export const HelpView = (): JSX.Element => (
             <div className="mt-2 space-y-2 text-sm leading-6 text-slate-600 dark:text-slate-300">
               <p>
                 Ohne KI-Aufruf bleiben Arbeitsdaten lokal im Browser. Beim KI-Aufruf wird nur der
-                ausgewählte Arbeitskontext an den Backend-Proxy gesendet.
-              </p>
-              <p>
-                KI-Funktionen brauchen einen erreichbaren Backend-Proxy mit{' '}
-                <span className="font-mono">ANTHROPIC_API_KEY</span>.
+                ausgewählte Arbeitskontext an den KI-Dienst gesendet.
               </p>
               <p>
                 Der Lizenzschlüssel wird aktuell lokal gespeichert. Eine Online-Aktivierung oder
@@ -256,20 +317,28 @@ export const HelpView = (): JSX.Element => (
           <h2 className="font-semibold">Fehlerbehebung</h2>
           <div className="mt-3 grid gap-3 text-sm leading-6 text-slate-600 dark:text-slate-300 md:grid-cols-2">
             <div>
-              <p className="font-medium text-ink dark:text-slate-100">Weiße Seite</p>
-              <p>Seite neu laden und prüfen, ob der lokale Dev-Server unter localhost erreichbar ist.</p>
+              <p className="font-medium text-ink dark:text-slate-100">Die Seite wirkt leer</p>
+              <p>Seite neu laden. Falls das nicht hilft, Browser-Tab schließen und SMART Focus erneut öffnen.</p>
             </div>
             <div>
               <p className="font-medium text-ink dark:text-slate-100">KI antwortet nicht</p>
-              <p>Backend-Proxy starten und <span className="font-mono">ANTHROPIC_API_KEY</span> setzen.</p>
+              <p>Internetverbindung prüfen und später erneut versuchen. Bereits vorhandene Aufgaben bleiben erhalten.</p>
             </div>
             <div>
               <p className="font-medium text-ink dark:text-slate-100">Pomodoro startet nicht</p>
-              <p>Es muss genau eine Karte in der Fokus-Spalte liegen.</p>
+              <p>Eine Aufgabe in die Fokus-Spalte ziehen. Die Fokus-Spalte darf nur eine Karte enthalten.</p>
             </div>
             <div>
               <p className="font-medium text-ink dark:text-slate-100">Kalenderdaten mehrfach importiert</p>
-              <p>Import/Export öffnen und Kalender-Einträge oder alle Aufgaben bereinigen.</p>
+              <p>Import/Export öffnen und den Button „Alle Kalender-Einträge löschen“ verwenden.</p>
+            </div>
+            <div>
+              <p className="font-medium text-ink dark:text-slate-100">Aufgabe ist falsch einsortiert</p>
+              <p>Die Karte per Drag-and-drop in die passende Spalte ziehen oder die Karte öffnen und bearbeiten.</p>
+            </div>
+            <div>
+              <p className="font-medium text-ink dark:text-slate-100">Daten fehlen nach Browserwechsel</p>
+              <p>JSON-Sicherung importieren. Lokale Daten sind an den jeweiligen Browser gebunden.</p>
             </div>
           </div>
         </div>
@@ -279,11 +348,11 @@ export const HelpView = (): JSX.Element => (
       <h2 className="font-semibold">Empfohlener Ablauf</h2>
       <ol className="mt-3 grid gap-2 text-sm leading-6 text-slate-600 dark:text-slate-300 md:grid-cols-2">
         <li>1. Aufgaben in der Inbox sammeln oder per KI vorschlagen lassen.</li>
-        <li>2. Wichtige Aufgaben nach Heute ziehen.</li>
-        <li>3. Genau eine Aufgabe in Fokus legen.</li>
-        <li>4. Pomodoro starten und nach Abschluss speichern.</li>
-        <li>5. Erledigte Karten abschließen oder archivieren.</li>
-        <li>6. Reporting und Export regelmäßig zur Sicherung nutzen.</li>
+        <li>2. Aufgaben im Kanban suchen, filtern und priorisieren.</li>
+        <li>3. Wichtige Aufgaben nach Heute ziehen.</li>
+        <li>4. Genau eine Aufgabe in Fokus legen.</li>
+        <li>5. Pomodoro starten und mit Notiz/Fokus-Score abschließen.</li>
+        <li>6. Reports nach Zeitraum auswerten und regelmäßig JSON sichern.</li>
       </ol>
     </Panel>
   </div>

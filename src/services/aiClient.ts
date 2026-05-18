@@ -1,5 +1,5 @@
 import { aiSuggestionResponseSchema } from '../schemas/domain';
-import type { AiSuggestionResponse, Project, TaskCard } from '../types/domain';
+import type { AiSuggestionResponse, PomodoroSession, Project, TaskCard } from '../types/domain';
 
 export type AiAction =
   | 'tasks_from_text'
@@ -18,6 +18,7 @@ export interface AiRequestContext {
   text?: string;
   tasks?: TaskCard[];
   projects?: Project[];
+  sessions?: PomodoroSession[];
 }
 
 export const requestAiSuggestion = async (
